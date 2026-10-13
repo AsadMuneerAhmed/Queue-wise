@@ -1,0 +1,1052 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Queue Token | QueueWise</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        :root {
+            --qw-navy: #14243a;
+            --qw-navy-light: #203650;
+            --qw-teal: #0f9f8f;
+            --qw-teal-dark: #087f72;
+            --qw-bg: #f4f7fb;
+            --qw-white: #ffffff;
+            --qw-text: #25354b;
+            --qw-muted: #78869a;
+            --qw-border: #e5eaf1;
+            --qw-green-bg: #dcfce7;
+            --qw-green-text: #166534;
+            --qw-blue-bg: #dbeafe;
+            --qw-blue-text: #1d4ed8;
+            --qw-red-bg: #fee2e2;
+            --qw-red-text: #b91c1c;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--qw-bg);
+            color: var(--qw-text);
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+        }
+
+        .qw-page [hidden] { display: none !important; }
+
+        /* Navigation */
+        .qw-topbar {
+            min-height: 76px;
+            padding: 0 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            background: var(--qw-navy);
+            color: white;
+            box-shadow: 0 4px 16px rgba(20, 36, 58, .12);
+        }
+
+        .qw-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 11px;
+            color: white;
+            font-size: 23px;
+            font-weight: 800;
+            text-decoration: none;
+            letter-spacing: -.6px;
+            white-space: nowrap;
+        }
+
+        .qw-brand-icon {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border-radius: 11px;
+            background: var(--qw-teal);
+            color: white;
+            font-size: 21px;
+            font-weight: 800;
+        }
+
+        .qw-brand span:last-child { color: #4dd7c6; }
+
+        .qw-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qw-nav a {
+            padding: 10px 14px;
+            border-radius: 9px;
+            color: #c5d0df;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 650;
+            transition: background .2s, color .2s;
+        }
+
+        .qw-nav a:hover,
+        .qw-nav a.qw-nav-active {
+            background: var(--qw-navy-light);
+            color: white;
+        }
+
+        /* Main page */
+        .qw-page {
+            width: min(1180px, 92%);
+            margin: 0 auto;
+            padding: 32px 0 54px;
+        }
+
+        .qw-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 22px;
+            color: var(--qw-muted);
+            font-size: 12px;
+        }
+
+        .qw-breadcrumb a {
+            color: var(--qw-teal-dark);
+            text-decoration: none;
+            font-weight: 650;
+        }
+
+        .qw-page-heading {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 26px;
+        }
+
+        .qw-eyebrow {
+            margin: 0 0 9px;
+            color: var(--qw-teal-dark);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+        }
+
+        .qw-page-heading h1 {
+            margin: 0;
+            color: var(--qw-navy);
+            font-size: clamp(25px, 3vw, 32px);
+            line-height: 1.25;
+            letter-spacing: -.8px;
+        }
+
+        .qw-page-heading p.qw-subtitle {
+            margin: 9px 0 0;
+            color: var(--qw-muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .qw-live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            padding: 10px 13px;
+            border: 1px solid #ccefe7;
+            border-radius: 10px;
+            background: #effcf8;
+            color: #087f72;
+            font-size: 12px;
+            font-weight: 750;
+        }
+
+        .qw-live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, .12);
+        }
+
+        /* Token banner */
+        .tracking-hero {
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 28px;
+            padding: 34px;
+            border-radius: 18px;
+            background: linear-gradient(120deg, #14243a 0%, #203e56 62%, #126e68 100%);
+            color: white;
+            box-shadow: 0 12px 30px rgba(20, 36, 58, .12);
+        }
+
+        .tracking-hero::after {
+            content: "";
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            top: -155px;
+            right: 90px;
+            border: 1px solid rgba(255,255,255,.09);
+            border-radius: 50%;
+            box-shadow: 0 0 0 35px rgba(255,255,255,.025),
+                        0 0 0 70px rgba(255,255,255,.025);
+            pointer-events: none;
+        }
+
+        .qw-hero-copy {
+            position: relative;
+            z-index: 1;
+            min-width: 0;
+        }
+
+        .tracking-hero .eyebrow {
+            margin: 0 0 14px;
+            color: #83e6d7;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+        }
+
+        .tracking-hero h1 {
+            margin: 18px 0 9px;
+            color: white;
+            font-size: clamp(25px, 3vw, 34px);
+            line-height: 1.25;
+            letter-spacing: -.7px;
+            overflow-wrap: anywhere;
+        }
+
+        .tracking-hero p.qw-hero-description {
+            max-width: 570px;
+            margin: 0;
+            color: #d3e1ed;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .token-number {
+            margin: 0;
+            color: white;
+            font-size: clamp(42px, 6vw, 58px);
+            font-weight: 850;
+            line-height: 1.1;
+            letter-spacing: -1.5px;
+            overflow-wrap: anywhere;
+        }
+
+        .qw-token-ticket {
+            position: relative;
+            z-index: 1;
+            width: 210px;
+            min-width: 0;
+            padding: 23px 20px;
+            border: 1px solid rgba(255,255,255,.18);
+            border-radius: 15px;
+            background: rgba(255,255,255,.09);
+            text-align: center;
+            backdrop-filter: blur(8px);
+        }
+
+        .qw-ticket-label {
+            margin: 0 0 12px;
+            color: #d2e9e8;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+        }
+
+        .qw-ticket-divider {
+            margin: 17px 0;
+            border-top: 1px dashed rgba(255,255,255,.32);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 7px 11px;
+            border-radius: 8px;
+            background: var(--qw-green-bg);
+            color: var(--qw-green-text);
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: capitalize;
+        }
+
+        .status-badge::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .status-badge.serving {
+            background: var(--qw-blue-bg);
+            color: var(--qw-blue-text);
+        }
+
+        .status-badge.completed {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .status-badge.cancelled {
+            background: var(--qw-red-bg);
+            color: var(--qw-red-text);
+        }
+
+        /* Dashboard card */
+        .tracking-card {
+            margin-top: 22px;
+            padding: 28px;
+            border: 1px solid var(--qw-border);
+            border-radius: 16px;
+            background: var(--qw-white);
+            box-shadow: 0 5px 18px rgba(26, 43, 66, .035);
+        }
+
+        .qw-card-heading {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 23px;
+        }
+
+        .tracking-card .eyebrow {
+            margin: 0 0 8px;
+            color: var(--qw-teal-dark);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.3px;
+        }
+
+        .tracking-card h2 {
+            margin: 0;
+            color: var(--qw-navy);
+            font-size: 20px;
+            letter-spacing: -.4px;
+        }
+
+        .qw-auto-refresh {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: #f0fdfa;
+            color: #087f72;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .tracking-stats {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin: 0 0 25px;
+        }
+
+        .tracking-stat {
+            position: relative;
+            overflow: hidden;
+            min-width: 0;
+            padding: 22px;
+            border: 1px solid var(--qw-border);
+            border-radius: 13px;
+            background: #f8fafc;
+        }
+
+        .tracking-stat::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--qw-teal);
+        }
+
+        .tracking-stat span {
+            display: block;
+            margin-bottom: 11px;
+            color: var(--qw-muted);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .tracking-stat strong {
+            display: block;
+            color: var(--qw-navy);
+            font-size: clamp(23px, 3vw, 29px);
+            font-weight: 800;
+            line-height: 1.3;
+            overflow-wrap: anywhere;
+        }
+
+        /* Turn notification */
+        .turn-notification {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 0 0 22px;
+            padding: 16px;
+            border: 1px solid #a7f3d0;
+            border-radius: 12px;
+            background: #ecfdf5;
+            color: #065f46;
+            line-height: 1.6;
+        }
+
+        .turn-notification[hidden] {
+            display: none !important;
+        }
+
+        .turn-notification.approaching {
+            border-color: #fcd34d;
+            background: #fffbeb;
+            color: #92400e;
+        }
+
+        .turn-notification.called {
+            border-color: #93c5fd;
+            background: #eff6ff;
+            color: #1e40af;
+        }
+
+        .turn-notification.completed {
+            border-color: #d1d5db;
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .turn-notification.cancelled {
+            border-color: #fecaca;
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .turn-notification strong {
+            display: block;
+            margin-bottom: 3px;
+            font-size: 14px;
+        }
+
+        .turn-notification p {
+            margin: 0;
+            font-size: 13px;
+        }
+
+        /* Token information */
+        .qw-details-title {
+            margin: 0 0 15px;
+            color: var(--qw-navy);
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .tracking-meta {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            padding: 18px;
+            border: 1px solid var(--qw-border);
+            border-radius: 12px;
+            background: white;
+        }
+
+        .qw-meta-item { min-width: 0; }
+
+        .qw-meta-label {
+            display: block;
+            margin-bottom: 7px;
+            color: var(--qw-muted);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .qw-meta-value {
+            color: var(--qw-text);
+            font-size: 13px;
+            font-weight: 750;
+            overflow-wrap: anywhere;
+        }
+
+        /* Progress bar */
+        .progress-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 28px;
+            color: var(--qw-text);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .progress-heading span:last-child {
+            color: var(--qw-teal-dark);
+            font-weight: 800;
+        }
+
+        .progress-track {
+            height: 9px;
+            margin: 12px 0 0;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #e8edf3;
+        }
+
+        .progress-fill {
+            width: 8%;
+            height: 100%;
+            border-radius: 20px;
+            background: var(--qw-teal);
+            transition: width .35s ease;
+        }
+
+        .progress-fill.serving { background: #2563eb; }
+        .progress-fill.completed { background: #64748b; }
+        .progress-fill.cancelled { background: #dc2626; }
+
+        /* Status notice */
+        .tracking-notice {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 22px 0 15px;
+            padding: 15px 16px;
+            border: 1px solid #d9eee9;
+            border-radius: 11px;
+            background: #f0fdfa;
+            color: #3f625e;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .qw-notice-icon {
+            display: grid;
+            place-items: center;
+            flex: 0 0 25px;
+            width: 25px;
+            height: 25px;
+            border-radius: 8px;
+            background: #d5f5ed;
+            color: #087f72;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .small-note {
+            margin: 12px 0 0;
+            color: var(--qw-muted);
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .tracking-error { color: #b45309 !important; }
+
+        .tracking-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 22px;
+            border-top: 1px solid var(--qw-border);
+        }
+
+        .tracking-actions a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 43px;
+            padding: 12px 17px;
+            border: 1px solid transparent;
+            border-radius: 9px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 750;
+            transition: transform .2s, background .2s;
+        }
+
+        .tracking-actions a:hover { transform: translateY(-1px); }
+        .tracking-primary { background: var(--qw-teal); color: white; }
+        .tracking-primary:hover { background: var(--qw-teal-dark); }
+
+        .tracking-secondary {
+            border-color: var(--qw-border) !important;
+            background: white;
+            color: var(--qw-navy);
+        }
+
+        .tracking-secondary:hover { background: #f8fafc; }
+
+        /* Footer */
+        .qw-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 22px 5%;
+            border-top: 1px solid var(--qw-border);
+            background: white;
+        }
+
+        .qw-footer p {
+            margin: 0;
+            color: var(--qw-muted);
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .qw-footer strong { color: var(--qw-navy); }
+
+        /* Responsive design */
+        @media (max-width: 760px) {
+            .qw-topbar {
+                padding: 15px 4%;
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 13px;
+            }
+
+            .qw-nav { width: 100%; flex-wrap: wrap; }
+
+            .qw-nav a { padding: 9px 11px; font-size: 12px; }
+
+            .qw-page { width: 92%; padding-top: 24px; }
+
+            .tracking-hero {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 23px;
+                padding: 25px;
+            }
+
+            .qw-token-ticket {
+                width: 100%;
+                max-width: 320px;
+                text-align: left;
+            }
+
+            .qw-ticket-divider { margin: 13px 0; }
+
+            .qw-page-heading {
+                flex-direction: column;
+                gap: 13px;
+            }
+
+            .tracking-card { padding: 22px; }
+
+            .tracking-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+            .qw-footer {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .qw-brand { font-size: 21px; }
+            .qw-page { width: 94%; }
+            .tracking-hero { padding: 21px; border-radius: 14px; }
+            .token-number { font-size: 43px; }
+            .tracking-card { padding: 17px; }
+
+            .qw-card-heading {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .tracking-stats { gap: 10px; }
+            .tracking-stat { padding: 15px 13px; }
+
+            .tracking-stat span {
+                font-size: 11px;
+                line-height: 1.5;
+            }
+
+            .tracking-stat strong { font-size: 22px; }
+            .tracking-meta { grid-template-columns: minmax(0, 1fr); gap: 15px; }
+            .tracking-actions { flex-direction: column; }
+            .tracking-actions a { width: 100%; }
+            .qw-live-indicator { font-size: 11px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="qw-topbar">
+        <a class="qw-brand" href="/" aria-label="QueueWise home">
+            <span class="qw-brand-icon">Q</span>
+            <span>QueueWise<span>.</span></span>
+        </a>
+        <nav class="qw-nav" aria-label="Main navigation">
+            <a href="/">Get a Token</a>
+            <a href="/staff">Staff Dashboard</a>
+        </nav>
+    </header>
+
+    <main class="qw-page">
+        <div class="qw-breadcrumb">
+            <a href="/">Home</a>
+            <span>/</span>
+            <span>My Queue Token</span>
+        </div>
+
+        <section class="qw-page-heading">
+            <div>
+                <p class="qw-eyebrow">Visitor Portal</p>
+                <h1>My Queue Token</h1>
+                <p class="qw-subtitle">
+                    Track your queue position and service progress in real time.
+                </p>
+            </div>
+            <div class="qw-live-indicator">
+                <span class="qw-live-dot"></span>
+                Live queue tracking
+            </div>
+        </section>
+
+        <section class="tracking-hero">
+            <div class="qw-hero-copy">
+                <p class="eyebrow">YOUR PERSONAL QUEUE TRACKER</p>
+                <p class="token-number" id="tokenNumber">{{ token.token_number }}</p>
+                <span class="status-badge" id="tokenStatus">{{ token.status }}</span>
+                <h1 id="statusHeading">Your place in the queue</h1>
+                <p class="qw-hero-description" id="statusDescription">
+                    Your queue information will update automatically.
+                </p>
+            </div>
+
+            <div class="qw-token-ticket">
+                <p class="qw-ticket-label">YOUR TOKEN</p>
+                <p class="token-number" id="ticketNumber" style="font-size: 30px;">
+                    {{ token.token_number }}
+                </p>
+                <div class="qw-ticket-divider"></div>
+                <p class="qw-ticket-label" style="margin-bottom: 8px;">CURRENT STATUS</p>
+                <span class="status-badge" id="ticketStatus">{{ token.status }}</span>
+            </div>
+        </section>
+
+        <section class="tracking-card">
+            <div class="qw-card-heading">
+                <div>
+                    <p class="eyebrow">LIVE TOKEN DETAILS</p>
+                    <h2>Track your progress</h2>
+                </div>
+                <span class="qw-auto-refresh">
+                    <span class="qw-live-dot"></span>
+                    Auto-refresh: 5 sec
+                </span>
+            </div>
+
+            <div class="tracking-stats">
+                <div class="tracking-stat">
+                    <span>Queue position</span>
+                    <strong id="tokenPosition">—</strong>
+                </div>
+                <div class="tracking-stat">
+                    <span>Estimated waiting time</span>
+                    <strong id="tokenWait">—</strong>
+                </div>
+            </div>
+
+            <!-- NEW: Visitor turn notification -->
+            <div
+                class="turn-notification"
+                id="turnNotification"
+                role="status"
+                aria-live="polite"
+                hidden
+            >
+                <span id="turnNotificationIcon" aria-hidden="true" style="font-size: 22px;">🔔</span>
+                <div>
+                    <strong id="turnNotificationTitle">Queue update</strong>
+                    <p id="turnNotificationMessage"></p>
+                </div>
+            </div>
+
+            <h3 class="qw-details-title">Token information</h3>
+            <div class="tracking-meta">
+                <div class="qw-meta-item">
+                    <span class="qw-meta-label">Visitor name</span>
+                    <span class="qw-meta-value" id="visitorName">{{ token.visitor_name }}</span>
+                </div>
+                <div class="qw-meta-item">
+                    <span class="qw-meta-label">Requested service</span>
+                    <span class="qw-meta-value" id="serviceName">{{ token.service }}</span>
+                </div>
+                <div class="qw-meta-item">
+                    <span class="qw-meta-label">Assigned counter</span>
+                    <span class="qw-meta-value" id="counterName">Not assigned</span>
+                </div>
+            </div>
+
+            <div class="progress-heading">
+                <span>Service progress</span>
+                <span id="progressLabel">Waiting</span>
+            </div>
+
+            <div
+                class="progress-track"
+                id="progressTrack"
+                role="progressbar"
+                aria-label="Token service progress"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="8"
+            >
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div class="tracking-notice" id="trackingNotice">
+                <span class="qw-notice-icon" aria-hidden="true">i</span>
+                <span>
+                    Your token status refreshes automatically every five seconds.
+                    Estimated waiting times are not guaranteed appointment times.
+                </span>
+            </div>
+
+            <p class="small-note" id="lastUpdated" aria-live="polite">
+                Connecting to the live queue...
+            </p>
+
+            <div class="tracking-actions">
+                <a href="/" class="tracking-primary">
+                    <span aria-hidden="true">+</span>
+                    Get another token
+                </a>
+                <a href="/staff" class="tracking-secondary">
+                    Staff Dashboard
+                    <span aria-hidden="true">→</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="qw-footer">
+        <p><strong>QueueWise</strong> · Smarter queues, better public services.</p>
+        <p>Hackathon prototype. Not an official government service.</p>
+    </footer>
+
+    <script>
+        const tokenId = Number("{{ token.id }}");
+
+        const elements = {
+            tokenNumber: document.getElementById("tokenNumber"),
+            ticketNumber: document.getElementById("ticketNumber"),
+            tokenStatus: document.getElementById("tokenStatus"),
+            ticketStatus: document.getElementById("ticketStatus"),
+            visitorName: document.getElementById("visitorName"),
+            serviceName: document.getElementById("serviceName"),
+            counterName: document.getElementById("counterName"),
+            tokenPosition: document.getElementById("tokenPosition"),
+            tokenWait: document.getElementById("tokenWait"),
+            statusHeading: document.getElementById("statusHeading"),
+            statusDescription: document.getElementById("statusDescription"),
+            progressFill: document.getElementById("progressFill"),
+            progressTrack: document.getElementById("progressTrack"),
+            progressLabel: document.getElementById("progressLabel"),
+            trackingNotice: document.getElementById("trackingNotice"),
+            lastUpdated: document.getElementById("lastUpdated"),
+            turnNotification: document.getElementById("turnNotification"),
+            turnNotificationIcon: document.getElementById("turnNotificationIcon"),
+            turnNotificationTitle: document.getElementById("turnNotificationTitle"),
+            turnNotificationMessage: document.getElementById("turnNotificationMessage")
+        };
+
+        function updateProgress(status, position) {
+            let progress = 8;
+            let label = "Waiting";
+            let className = "";
+
+            if (status === "Serving") {
+                progress = 65;
+                label = "In service";
+                className = "serving";
+            } else if (status === "Completed") {
+                progress = 100;
+                label = "Completed";
+                className = "completed";
+            } else if (status === "Cancelled") {
+                progress = 0;
+                label = "Cancelled";
+                className = "cancelled";
+            } else if (status === "Waiting") {
+                if (position > 0) {
+                    progress = Math.max(8, Math.min(55, 55 / position));
+                }
+                label = position > 0 ? `Position ${position}` : "Waiting";
+            }
+
+            elements.progressFill.style.width = `${progress}%`;
+            elements.progressFill.className = `progress-fill ${className}`.trim();
+            elements.progressLabel.textContent = label;
+            elements.progressTrack.setAttribute("aria-valuenow", String(progress));
+        }
+
+        function updateStatusMessage(status, counter) {
+            if (status === "Waiting") {
+                elements.statusHeading.textContent = "You're in the queue.";
+                elements.statusDescription.textContent =
+                    "Please wait until your token is called. " +
+                    "Your queue position updates automatically.";
+                elements.trackingNotice.lastElementChild.textContent =
+                    "Please remain available and follow staff instructions " +
+                    "when your token is called.";
+            } else if (status === "Serving") {
+                elements.statusHeading.textContent = "It's your turn!";
+                elements.statusDescription.textContent =
+                    `Please proceed to ${counter || "the assigned counter"} ` +
+                    "for your service.";
+                elements.trackingNotice.lastElementChild.textContent =
+                    "Your token is currently being served. Please proceed " +
+                    "to the assigned counter or follow staff instructions.";
+            } else if (status === "Completed") {
+                elements.statusHeading.textContent = "Service completed!";
+                elements.statusDescription.textContent =
+                    "Your service has been marked as complete. " +
+                    "Thank you for using QueueWise.";
+                elements.trackingNotice.lastElementChild.textContent =
+                    "This token has been completed. You can return to the " +
+                    "visitor dashboard if you need another token.";
+            } else if (status === "Cancelled") {
+                elements.statusHeading.textContent = "This token was cancelled.";
+                elements.statusDescription.textContent =
+                    "Please contact the service desk if you still need help.";
+                elements.trackingNotice.lastElementChild.textContent =
+                    "This token is cancelled. Contact staff for assistance " +
+                    "if you believe this is a mistake.";
+            } else {
+                elements.statusHeading.textContent = "Token status update";
+                elements.statusDescription.textContent =
+                    "Please contact the service desk for assistance.";
+                elements.trackingNotice.lastElementChild.textContent =
+                    "The token has an unfamiliar status. Please check with staff.";
+            }
+        }
+
+        // NEW: Show the appropriate notification for each queue state.
+        function updateTurnNotification(token) {
+            const box = elements.turnNotification;
+            const title = elements.turnNotificationTitle;
+            const message = elements.turnNotificationMessage;
+            const icon = elements.turnNotificationIcon;
+            const position = Number(token.position);
+
+            box.className = "turn-notification";
+            box.hidden = true;
+
+            if (token.status === "Serving") {
+                box.classList.add("called");
+                icon.textContent = "🔔";
+                title.textContent = "It's your turn!";
+                message.textContent =
+                    "Please proceed to " +
+                    (token.counter || "the assigned counter") +
+                    " for your service.";
+                box.hidden = false;
+            } else if (
+                token.status === "Waiting" &&
+                position > 0 &&
+                position <= 2
+            ) {
+                box.classList.add("approaching");
+                icon.textContent = "⏰";
+                title.textContent = "Your turn is approaching!";
+                message.textContent =
+                    "You are near the front of the queue. Please stay nearby " +
+                    "and watch for your token to be called.";
+                box.hidden = false;
+            } else if (token.status === "Completed") {
+                box.classList.add("completed");
+                icon.textContent = "✓";
+                title.textContent = "Service completed";
+                message.textContent =
+                    "Your service is complete. Thank you for using QueueWise.";
+                box.hidden = false;
+            } else if (token.status === "Cancelled") {
+                box.classList.add("cancelled");
+                icon.textContent = "!";
+                title.textContent = "Token cancelled";
+                message.textContent =
+                    "Please contact the service desk if you still need assistance.";
+                box.hidden = false;
+            }
+        }
+
+        async function updateToken() {
+            try {
+                const response = await fetch(
+                    `/api/tokens/${tokenId}`,
+                    { cache: "no-store" }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || "Unable to load token.");
+                }
+
+                const token = data.token;
+
+                elements.tokenNumber.textContent = token.token_number;
+                elements.ticketNumber.textContent = token.token_number;
+                elements.tokenStatus.textContent = token.status;
+                elements.ticketStatus.textContent = token.status;
+
+                const statusClass = (token.status || "").toLowerCase();
+                elements.tokenStatus.className = "status-badge " + statusClass;
+                elements.ticketStatus.className = "status-badge " + statusClass;
+
+                elements.visitorName.textContent = token.visitor_name;
+                elements.serviceName.textContent = token.service;
+                elements.counterName.textContent = token.counter || "Not assigned";
+
+                const waiting = token.status === "Waiting";
+                const position = Number(token.position);
+
+                elements.tokenPosition.textContent =
+                    waiting && position > 0 ? position : "—";
+
+                elements.tokenWait.textContent =
+                    waiting && token.estimated_wait_minutes != null
+                        ? `${token.estimated_wait_minutes} min`
+                        : "—";
+
+                updateStatusMessage(token.status, token.counter);
+                updateTurnNotification(token);
+                updateProgress(token.status, position);
+
+                elements.lastUpdated.classList.remove("tracking-error");
+                elements.lastUpdated.textContent =
+                    `Last updated: ${new Date().toLocaleTimeString()}`;
+            } catch (error) {
+                elements.lastUpdated.classList.add("tracking-error");
+                elements.lastUpdated.textContent =
+                    "Couldn't refresh your token right now. " +
+                    "We'll try again automatically.";
+                console.error("Token refresh error:", error);
+            }
+        }
+
+        updateToken();
+        setInterval(updateToken, 5000);
+    </script>
+</body>
+</html>

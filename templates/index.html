@@ -1,0 +1,1378 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f3f6fb">
+    <meta name="description" content="Join the QueueWise virtual queue and track your public service token and estimated waiting time.">
+    <title>QueueWise | Visitor Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        :root {
+            --ops-bg: #f3f6fb;
+            --ops-navy: #111d32;
+            --ops-navy-light: #1b2b45;
+            --ops-teal: #13b8a6;
+            --ops-text: #182438;
+            --ops-muted: #7b879b;
+            --ops-border: #e7ecf3;
+            --ops-white: #fff;
+        }
+
+        /* Isolate visitor portal styles from shared stylesheet rules */
+        .visitor-layout,
+        .visitor-layout *,
+        .visitor-footer,
+        .visitor-footer * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--ops-bg);
+            color: var(--ops-text);
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+        }
+
+        .visitor-layout {
+            min-height: 100vh;
+            width: 100%;
+            min-width: 0;
+        }
+
+        /* Header */
+        .visitor-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            min-height: 76px;
+            padding: 0 5%;
+            background: var(--ops-navy);
+            color: #fff;
+        }
+
+        .visitor-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 11px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 23px;
+            font-weight: 800;
+            letter-spacing: -.7px;
+            flex-shrink: 0;
+        }
+
+        .visitor-brand-mark {
+            display: grid;
+            place-items: center;
+            width: 39px;
+            height: 39px;
+            flex: 0 0 39px;
+            border-radius: 12px;
+            background: var(--ops-teal);
+            color: #092b31;
+            font-size: 22px;
+        }
+
+        .visitor-brand-name span {
+            color: var(--ops-teal);
+        }
+
+        .visitor-nav {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .visitor-nav a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-height: 39px;
+            padding: 0 14px;
+            border-radius: 9px;
+            color: #c2cede;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 650;
+            white-space: nowrap;
+            transition: background .2s ease, color .2s ease;
+        }
+
+        .visitor-nav a:hover {
+            background: var(--ops-navy-light);
+            color: #fff;
+        }
+
+        .visitor-nav a.active {
+            background: #164b4b;
+            color: #66ead7;
+        }
+
+        .visitor-nav .nav-arrow {
+            font-size: 14px;
+        }
+
+        /* Main page */
+        .visitor-main {
+            width: 100%;
+            max-width: 1500px;
+            min-width: 0;
+            margin: 0 auto;
+            padding: 32px 34px 42px;
+        }
+
+        .visitor-hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr);
+            align-items: center;
+            gap: 30px;
+            min-width: 0;
+            padding: 36px;
+            overflow: hidden;
+            border: 1px solid var(--ops-border);
+            border-radius: 18px;
+            background: #fff;
+            box-shadow: 0 3px 12px rgba(23, 39, 67, .025);
+        }
+
+        .visitor-hero-content {
+            min-width: 0;
+        }
+
+        .visitor-eyebrow {
+            margin: 0 0 10px;
+            color: #0b9c8b;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.6px;
+        }
+
+        .visitor-hero h1 {
+            margin: 0;
+            color: var(--ops-text);
+            font-size: clamp(35px, 4vw, 55px);
+            line-height: 1.1;
+            letter-spacing: -2px;
+            overflow-wrap: break-word;
+        }
+
+        .visitor-hero h1 span {
+            color: var(--ops-teal);
+        }
+
+        .visitor-hero-copy {
+            max-width: 510px;
+            margin: 18px 0 24px;
+            color: var(--ops-muted);
+            font-size: 13px;
+            line-height: 1.9;
+        }
+
+        .visitor-hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 19px;
+            padding: 9px 12px;
+            border: 1px solid #cdeee3;
+            border-radius: 30px;
+            background: #effbf6;
+            color: #16815e;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .5px;
+        }
+
+        .visitor-live-dot {
+            width: 7px;
+            height: 7px;
+            flex: 0 0 7px;
+            border-radius: 50%;
+            background: #28c997;
+        }
+
+        .visitor-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            min-height: 45px;
+            padding: 0 18px;
+            border-radius: 9px;
+            background: var(--ops-navy);
+            color: #fff;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 750;
+            transition: background .2s ease, transform .2s ease;
+        }
+
+        .visitor-cta:hover {
+            background: #263a56;
+            transform: translateY(-1px);
+        }
+
+        /* Illustrative token card */
+        .visitor-hero-visual {
+            display: grid;
+            place-items: center;
+            min-width: 0;
+            min-height: 265px;
+            padding: 20px;
+            border-radius: 15px;
+            background:
+                radial-gradient(circle at 80% 15%, rgba(19,184,166,.18), transparent 34%),
+                #f0f5fa;
+        }
+
+        .visitor-demo-ticket {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+            padding: 23px;
+            border: 1px solid #e3eaf2;
+            border-radius: 15px;
+            background: #fff;
+            box-shadow: 0 15px 35px rgba(23,39,67,.09);
+        }
+
+        .visitor-ticket-top,
+        .visitor-ticket-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .visitor-ticket-mini-brand {
+            color: #8290a3;
+            font-size: 9px;
+            font-weight: 850;
+            letter-spacing: 1.3px;
+        }
+
+        .visitor-ticket-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #28c997;
+        }
+
+        .visitor-ticket-label {
+            margin-top: 28px;
+            color: var(--ops-muted);
+            font-size: 10px;
+            font-weight: 750;
+            letter-spacing: 1px;
+        }
+
+        .visitor-ticket-number {
+            margin-top: 6px;
+            color: var(--ops-navy);
+            font-size: 45px;
+            font-weight: 850;
+            letter-spacing: -1.5px;
+            line-height: 1.2;
+        }
+
+        .visitor-ticket-number span {
+            color: #0b9c8b;
+        }
+
+        .visitor-ticket-divider {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+            margin: 22px 0 17px;
+        }
+
+        .visitor-ticket-divider span {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #edf1f6;
+        }
+
+        .visitor-ticket-bottom {
+            color: #16815e;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: .4px;
+        }
+
+        .visitor-ticket-check {
+            display: grid;
+            place-items: center;
+            width: 25px;
+            height: 25px;
+            border-radius: 8px;
+            background: #e2f8ef;
+            font-size: 14px;
+        }
+
+        .visitor-demo-caption {
+            margin: 12px 0 0;
+            color: #8b97a8;
+            font-size: 10px;
+            text-align: center;
+        }
+
+        /* Overview statistics */
+        .visitor-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            min-width: 0;
+            margin-top: 20px;
+        }
+
+        .visitor-stat-card {
+            min-width: 0;
+            padding: 21px;
+            border: 1px solid var(--ops-border);
+            border-radius: 15px;
+            background: #fff;
+            box-shadow: 0 3px 12px rgba(23,39,67,.025);
+        }
+
+        .visitor-stat-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .visitor-stat-label {
+            color: var(--ops-muted);
+            font-size: 11px;
+            font-weight: 750;
+        }
+
+        .visitor-stat-icon {
+            display: grid;
+            place-items: center;
+            width: 37px;
+            height: 37px;
+            flex: 0 0 37px;
+            border-radius: 11px;
+            font-size: 17px;
+        }
+
+        .visitor-icon-blue { background: #eaf1ff; color: #4979df; }
+        .visitor-icon-amber { background: #fff4df; color: #c8891a; }
+        .visitor-icon-green { background: #e2f8ef; color: #15966b; }
+
+        .visitor-stat-card p {
+            margin: 15px 0 7px;
+            color: var(--ops-muted);
+            font-size: 12px;
+        }
+
+        .visitor-stat-card h2 {
+            margin: 0 0 7px;
+            color: var(--ops-text);
+            font-size: 31px;
+            line-height: 1.1;
+            letter-spacing: -.8px;
+        }
+
+        .visitor-stat-foot {
+            color: #8b97a8;
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        /* Section heading */
+        .visitor-section-heading {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 18px;
+            min-width: 0;
+            margin: 34px 0 19px;
+        }
+
+        .visitor-section-heading > div:first-child {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .visitor-section-heading h2 {
+            margin: 0 0 7px;
+            color: var(--ops-text);
+            font-size: 25px;
+            letter-spacing: -.7px;
+        }
+
+        .visitor-section-description {
+            margin: 0;
+            color: var(--ops-muted);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .visitor-secure-note {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            flex: 0 0 auto;
+            color: #16815e;
+            font-size: 10px;
+            font-weight: 750;
+            white-space: nowrap;
+        }
+
+        /* Main form and queue panels */
+        .visitor-content-grid {
+            display: grid;
+            grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+            align-items: start;
+            gap: 20px;
+            min-width: 0;
+        }
+
+        .visitor-panel {
+            min-width: 0;
+            width: 100%;
+            padding: 24px;
+            border: 1px solid var(--ops-border);
+            border-radius: 15px;
+            background: #fff;
+            box-shadow: 0 3px 12px rgba(23,39,67,.025);
+        }
+
+        .visitor-panel-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .visitor-panel-icon {
+            display: grid;
+            place-items: center;
+            width: 40px;
+            height: 40px;
+            flex: 0 0 40px;
+            border-radius: 11px;
+            background: #e2f8f3;
+            color: #087e72;
+            font-size: 22px;
+        }
+
+        .visitor-step-label,
+        .visitor-section-tag {
+            padding: 7px 9px;
+            border-radius: 7px;
+            background: #f0f5fa;
+            color: #718097;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: .6px;
+            white-space: nowrap;
+        }
+
+        .visitor-panel h2 {
+            margin: 0 0 8px;
+            color: var(--ops-text);
+            font-size: 20px;
+            letter-spacing: -.5px;
+            overflow-wrap: break-word;
+        }
+
+        .visitor-muted {
+            margin: 0;
+            color: var(--ops-muted);
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        .visitor-form {
+            margin-top: 22px;
+            min-width: 0;
+        }
+
+        .visitor-form label {
+            display: block;
+            margin: 16px 0 8px;
+            color: #526176;
+            font-size: 11px;
+            font-weight: 750;
+        }
+
+        .visitor-form input,
+        .visitor-form select {
+            display: block;
+            width: 100%;
+            min-width: 0;
+            max-width: 100%;
+            min-height: 45px;
+            padding: 11px 12px;
+            border: 1px solid #dfe6ef;
+            border-radius: 9px;
+            background: #fff;
+            color: var(--ops-text);
+            font-family: inherit;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .visitor-form input::placeholder {
+            color: #9aa5b5;
+        }
+
+        .visitor-form input:focus,
+        .visitor-form select:focus {
+            border-color: var(--ops-teal);
+            box-shadow: 0 0 0 3px rgba(19,184,166,.1);
+        }
+
+        .visitor-form button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            width: 100%;
+            min-height: 46px;
+            margin-top: 23px;
+            padding: 0 15px;
+            border: 0;
+            border-radius: 9px;
+            background: var(--ops-navy);
+            color: #fff;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 750;
+            cursor: pointer;
+            transition: background .2s ease, transform .2s ease;
+        }
+
+        .visitor-form button:hover {
+            background: #263a56;
+            transform: translateY(-1px);
+        }
+
+        .visitor-form button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .visitor-form .button-arrow {
+            font-size: 17px;
+        }
+
+        .visitor-message {
+            margin: 12px 0 0;
+            color: #087c5c;
+            font-size: 11px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .visitor-message:empty {
+            display: none;
+        }
+
+        .visitor-message.error {
+            color: #b42318;
+        }
+
+        .visitor-form-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 23px;
+            padding: 13px;
+            border-radius: 9px;
+            background: #f6f9fc;
+        }
+
+        .visitor-note-icon {
+            display: grid;
+            place-items: center;
+            width: 19px;
+            height: 19px;
+            flex: 0 0 19px;
+            border-radius: 50%;
+            background: #e3edf8;
+            color: #526c8a;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .visitor-form-note p {
+            margin: 0;
+            color: #758298;
+            font-size: 10px;
+            line-height: 1.7;
+        }
+
+        /* Live queue */
+        .visitor-queue-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 23px;
+        }
+
+        .visitor-queue-header > div:first-child {
+            min-width: 0;
+            flex: 1 1 auto;
+        }
+
+        .visitor-live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            flex: 0 0 auto;
+            padding: 7px 9px;
+            border-radius: 7px;
+            background: #effbf6;
+            color: #16815e;
+            font-size: 9px;
+            font-weight: 850;
+            letter-spacing: .5px;
+        }
+
+        .visitor-live-indicator .visitor-live-dot {
+            width: 6px;
+            height: 6px;
+            flex-basis: 6px;
+        }
+
+        .visitor-queue-section {
+            min-width: 0;
+        }
+
+        .visitor-queue-section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 9px;
+        }
+
+        .visitor-queue-section-heading h3 {
+            margin: 0;
+            color: var(--ops-text);
+            font-size: 13px;
+        }
+
+        .visitor-section-chip {
+            padding: 6px 8px;
+            border-radius: 6px;
+            font-size: 8px;
+            font-weight: 800;
+            letter-spacing: .4px;
+            white-space: nowrap;
+        }
+
+        .visitor-serving-chip {
+            background: #f1eaff;
+            color: #8056c7;
+        }
+
+        .visitor-waiting-chip {
+            background: #fff4df;
+            color: #b47b16;
+        }
+
+        .visitor-queue-list {
+            width: 100%;
+            min-width: 0;
+        }
+
+        .visitor-queue-list .muted {
+            color: var(--ops-muted);
+        }
+
+        .visitor-queue-list .queue-placeholder,
+        .visitor-queue-list > p {
+            margin: 0;
+            padding: 15px 0;
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        /* Preserve the existing app.js queue class and its generated markup */
+        .visitor-queue-list .queue-item,
+        .visitor-queue-list .serving-item,
+        .visitor-queue-list .waiting-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            width: 100%;
+            min-width: 0;
+            padding: 13px 0;
+            border-bottom: 1px solid #edf1f6;
+        }
+
+        .visitor-queue-list .queue-item:last-child,
+        .visitor-queue-list .serving-item:last-child,
+        .visitor-queue-list .waiting-item:last-child {
+            border-bottom: 0;
+        }
+
+        .visitor-queue-list .queue-item > div,
+        .visitor-queue-list .serving-item > div,
+        .visitor-queue-list .waiting-item > div {
+            flex: 1 1 auto;
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .visitor-queue-list strong {
+            color: var(--ops-text);
+            font-size: 11px;
+            overflow-wrap: anywhere;
+        }
+
+        .visitor-queue-list small {
+            color: var(--ops-muted);
+            font-size: 10px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .visitor-queue-divider {
+            height: 1px;
+            margin: 21px 0;
+            background: var(--ops-border);
+        }
+
+        .visitor-queue-footer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 18px;
+            padding-top: 15px;
+            border-top: 1px solid var(--ops-border);
+            color: #8793a5;
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        .visitor-refresh-symbol {
+            color: #0b9c8b;
+            font-size: 15px;
+        }
+
+        /* Token confirmation */
+        .visitor-token-result {
+            margin-top: 20px;
+            scroll-margin-top: 20px;
+        }
+
+        .visitor-token-result[hidden] {
+            display: none !important;
+        }
+
+        .visitor-result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .visitor-result-header > div:first-child {
+            min-width: 0;
+        }
+
+        .visitor-result-header h2 {
+            margin: 0 0 8px;
+            font-size: 22px;
+        }
+
+        .visitor-result-header p:last-child {
+            margin: 0;
+            color: var(--ops-muted);
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .visitor-result-check {
+            display: grid;
+            place-items: center;
+            width: 43px;
+            height: 43px;
+            flex: 0 0 43px;
+            border-radius: 13px;
+            background: #e2f8ef;
+            color: #15966b;
+            font-size: 23px;
+        }
+
+        .visitor-result-ticket {
+            margin-top: 22px;
+            padding: 24px;
+            border: 1px dashed #cbd9e8;
+            border-radius: 12px;
+            background: #f8fafc;
+            text-align: center;
+        }
+
+        .visitor-result-label {
+            color: var(--ops-muted);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+        }
+
+        .visitor-result-ticket h3 {
+            margin: 10px 0;
+            color: #0b9c8b;
+            font-size: 42px;
+            letter-spacing: -1px;
+            overflow-wrap: anywhere;
+        }
+
+        .visitor-result-ticket-note {
+            color: var(--ops-muted);
+            font-size: 10px;
+        }
+
+        .visitor-result-stats {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .visitor-result-stat {
+            min-width: 0;
+            padding: 15px;
+            border: 1px solid var(--ops-border);
+            border-radius: 10px;
+        }
+
+        .visitor-result-stat span,
+        .visitor-result-stat strong {
+            display: block;
+        }
+
+        .visitor-result-stat span {
+            margin-bottom: 7px;
+            color: var(--ops-muted);
+            font-size: 10px;
+        }
+
+        .visitor-result-stat strong {
+            color: var(--ops-text);
+            font-size: 20px;
+            overflow-wrap: anywhere;
+        }
+
+        .visitor-tracking-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            min-height: 44px;
+            margin-top: 16px;
+            padding: 0 15px;
+            border-radius: 9px;
+            background: var(--ops-navy);
+            color: #fff;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 750;
+        }
+
+        .visitor-tracking-button:hover {
+            background: #263a56;
+        }
+
+        .visitor-small-note {
+            margin: 15px 0 0;
+            color: #8793a5;
+            font-size: 10px;
+            line-height: 1.8;
+        }
+
+        /* Help and footer */
+        .visitor-help-strip {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-top: 20px;
+            padding: 20px 22px;
+            border: 1px solid var(--ops-border);
+            border-radius: 14px;
+            background: #fff;
+        }
+
+        .visitor-help-icon {
+            display: grid;
+            place-items: center;
+            width: 35px;
+            height: 35px;
+            flex: 0 0 35px;
+            border-radius: 10px;
+            background: #eaf1ff;
+            color: #4979df;
+            font-weight: 800;
+        }
+
+        .visitor-help-strip h3 {
+            margin: 1px 0 6px;
+            font-size: 13px;
+        }
+
+        .visitor-help-strip p {
+            margin: 0;
+            color: var(--ops-muted);
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        .visitor-footer {
+            padding: 24px 5%;
+            border-top: 1px solid var(--ops-border);
+            background: #fff;
+            text-align: center;
+        }
+
+        .visitor-footer-brand {
+            color: var(--ops-navy);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 850;
+        }
+
+        .visitor-footer-brand span {
+            color: #0b9c8b;
+        }
+
+        .visitor-footer p {
+            margin: 8px 0 0;
+            color: var(--ops-muted);
+            font-size: 10px;
+            line-height: 1.8;
+        }
+
+        .visitor-footer .visitor-footer-disclaimer {
+            color: #98a2b2;
+        }
+
+        @media (max-width: 1050px) {
+            .visitor-main {
+                padding: 25px 22px 32px;
+            }
+
+            .visitor-hero {
+                gap: 20px;
+                padding: 28px;
+            }
+
+            .visitor-content-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .visitor-hero-visual {
+                min-height: 240px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .visitor-header {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 12px;
+                padding: 15px 16px;
+            }
+
+            .visitor-brand {
+                font-size: 20px;
+            }
+
+            .visitor-brand-mark {
+                width: 34px;
+                height: 34px;
+                flex-basis: 34px;
+            }
+
+            .visitor-nav {
+                width: 100%;
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 2px;
+            }
+
+            .visitor-nav a {
+                flex: 0 0 auto;
+                min-height: 36px;
+                padding: 0 11px;
+                font-size: 11px;
+            }
+
+            .visitor-main {
+                padding: 20px 15px 28px;
+            }
+
+            .visitor-hero {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 24px;
+                padding: 23px 19px;
+            }
+
+            .visitor-hero h1 {
+                font-size: clamp(35px, 9vw, 46px);
+            }
+
+            .visitor-hero-visual {
+                min-height: 235px;
+                padding: 17px;
+            }
+
+            .visitor-stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 11px;
+            }
+
+            .visitor-stat-card {
+                padding: 15px;
+            }
+
+            .visitor-stat-card:last-child {
+                grid-column: 1 / -1;
+            }
+
+            .visitor-stat-card h2 {
+                font-size: 27px;
+            }
+
+            .visitor-section-heading {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 29px;
+            }
+
+            .visitor-section-heading h2 {
+                font-size: 23px;
+            }
+
+            .visitor-panel {
+                padding: 19px;
+            }
+
+            .visitor-queue-header {
+                flex-wrap: wrap;
+            }
+
+            .visitor-help-strip {
+                padding: 17px;
+            }
+
+            .visitor-footer {
+                padding: 22px 16px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .visitor-stats {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .visitor-stat-card:last-child {
+                grid-column: auto;
+            }
+
+            .visitor-hero {
+                padding: 19px 15px;
+            }
+
+            .visitor-panel {
+                padding: 15px;
+            }
+
+            .visitor-section-tag {
+                font-size: 8px;
+            }
+
+            .visitor-result-stats {
+                gap: 8px;
+            }
+
+            .visitor-result-stat {
+                padding: 12px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="visitor-layout">
+    <header class="visitor-header">
+        <a class="visitor-brand" href="/" aria-label="QueueWise home">
+            <span class="visitor-brand-mark">Q</span>
+            <span class="visitor-brand-name">Queue<span>Wise</span></span>
+        </a>
+
+        <nav class="visitor-nav" aria-label="Main navigation">
+            <a class="active" href="/" aria-current="page">Visitor Portal</a>
+            <a href="/staff">Staff Dashboard <span class="nav-arrow" aria-hidden="true">↗</span></a>
+        </nav>
+    </header>
+
+    <main class="visitor-main">
+        <section class="visitor-hero">
+            <div class="visitor-hero-content">
+                <div class="visitor-hero-badge">
+                    <span class="visitor-live-dot"></span>
+                    SMART PUBLIC SERVICE
+                </div>
+
+                <h1>Your time<br>matters<span>.</span></h1>
+
+                <p class="visitor-hero-copy">
+                    Skip the uncertainty of physical queues. Get your service token,
+                    follow your position, and know when it is your turn.
+                </p>
+
+                <a class="visitor-cta" href="#get-token">
+                    Get your token <span aria-hidden="true">↓</span>
+                </a>
+            </div>
+
+            <div class="visitor-hero-visual" aria-hidden="true">
+                <div>
+                    <div class="visitor-demo-ticket">
+                        <div class="visitor-ticket-top">
+                            <span class="visitor-ticket-mini-brand">QUEUEWISE</span>
+                            <span class="visitor-ticket-status"></span>
+                        </div>
+                        <div class="visitor-ticket-label">YOUR QUEUE TOKEN</div>
+                        <div class="visitor-ticket-number">Q<span>001</span></div>
+                        <div class="visitor-ticket-divider">
+                            <span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span>
+                        </div>
+                        <div class="visitor-ticket-bottom">
+                            <span>YOUR TURN IS COMING</span>
+                            <span class="visitor-ticket-check">✓</span>
+                        </div>
+                    </div>
+                    <p class="visitor-demo-caption">Illustration only — your real token appears after check-in.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="visitor-stats" aria-label="Live queue overview">
+            <article class="visitor-stat-card">
+                <div class="visitor-stat-top">
+                    <span class="visitor-stat-label">QUEUE STATUS</span>
+                    <span class="visitor-stat-icon visitor-icon-amber" aria-hidden="true">◷</span>
+                </div>
+                <p>People waiting</p>
+                <h2 id="waitingCount">—</h2>
+                <span class="visitor-stat-foot">Visitors awaiting service</span>
+            </article>
+
+            <article class="visitor-stat-card">
+                <div class="visitor-stat-top">
+                    <span class="visitor-stat-label">IN PROGRESS</span>
+                    <span class="visitor-stat-icon visitor-icon-blue" aria-hidden="true">✓</span>
+                </div>
+                <p>Currently serving</p>
+                <h2 id="servingCount">—</h2>
+                <span class="visitor-stat-foot">Tokens being handled now</span>
+            </article>
+
+            <article class="visitor-stat-card">
+                <div class="visitor-stat-top">
+                    <span class="visitor-stat-label">SERVICE AVAILABILITY</span>
+                    <span class="visitor-stat-icon visitor-icon-green" aria-hidden="true">▦</span>
+                </div>
+                <p>Active counters</p>
+                <h2 id="counterCount">—</h2>
+                <span class="visitor-stat-foot">Counters currently available</span>
+            </article>
+        </section>
+
+        <section class="visitor-section-heading">
+            <div>
+                <p class="visitor-eyebrow">YOUR VISIT STARTS HERE</p>
+                <h2>Ready when you are.</h2>
+                <p class="visitor-section-description">Join the queue online and keep track of your turn.</p>
+            </div>
+            <div class="visitor-secure-note">
+                <span aria-hidden="true">●</span> Simple digital check-in
+            </div>
+        </section>
+
+        <section class="visitor-content-grid">
+            <article class="visitor-panel" id="get-token">
+                <div class="visitor-panel-top">
+                    <div class="visitor-panel-icon" aria-hidden="true">＋</div>
+                    <span class="visitor-step-label">STEP 01</span>
+                </div>
+
+                <p class="visitor-eyebrow">DIGITAL CHECK-IN</p>
+                <h2>Get your queue token</h2>
+                <p class="visitor-muted">Enter your details below to join the virtual queue.</p>
+
+                <form id="tokenForm" class="visitor-form">
+                    <label for="visitorName">Full name</label>
+                    <input
+                        id="visitorName"
+                        name="visitor_name"
+                        type="text"
+                        maxlength="100"
+                        autocomplete="name"
+                        required
+                        placeholder="Enter your full name"
+                    >
+
+                    
+<label for="service">Service required</label>
+<select id="service" name="service" required>
+    <option value="">Select a service</option>
+    <option value="New CNIC">New CNIC</option>
+    <option value="CNIC Renewal">CNIC Renewal</option>
+    <option value="CNIC Modification">CNIC Modification</option>
+    <option value="Lost/Reprint CNIC">Lost/Reprint CNIC</option>
+    <option value="B-Form / CRC">B-Form / CRC</option>
+    <option value="Juvenile Card">Juvenile Card</option>
+    <option value="Family Registration Certificate (FRC)">Family Registration Certificate (FRC)</option>
+    <option value="NICOP / POC">NICOP / POC</option>
+    <option value="Document Verification">Document Verification</option>
+    <option value="General Inquiry">General Inquiry</option>
+</select>
+                    <button type="submit" id="submitButton">
+                        <span>Get My Token</span>
+                        <span class="button-arrow" aria-hidden="true">→</span>
+                    </button>
+
+                    <p id="formMessage" class="visitor-message" role="status" aria-live="polite"></p>
+                </form>
+
+                <div class="visitor-form-note">
+                    <span class="visitor-note-icon" aria-hidden="true">i</span>
+                    <p>Your estimated waiting time may change as other visitors are served.</p>
+                </div>
+            </article>
+
+            <article class="visitor-panel">
+                <div class="visitor-queue-header">
+                    <div>
+                        <p class="visitor-eyebrow">REAL-TIME UPDATES</p>
+                        <h2>Live queue</h2>
+                        <p class="visitor-muted">See what is happening at the service counters.</p>
+                    </div>
+                    <span class="visitor-live-indicator">
+                        <span class="visitor-live-dot"></span> LIVE
+                    </span>
+                </div>
+
+                <section class="visitor-queue-section" aria-labelledby="servingHeading">
+                    <div class="visitor-queue-section-heading">
+                        <h3 id="servingHeading">Now serving</h3>
+                        <span class="visitor-section-chip visitor-serving-chip">IN SERVICE</span>
+                    </div>
+
+                    <div id="servingList" class="visitor-queue-list">
+                        <p class="muted queue-placeholder">Loading current service...</p>
+                    </div>
+                </section>
+
+                <div class="visitor-queue-divider"></div>
+
+                <section class="visitor-queue-section" aria-labelledby="waitingHeading">
+                    <div class="visitor-queue-section-heading">
+                        <h3 id="waitingHeading">Waiting in line</h3>
+                        <span class="visitor-section-chip visitor-waiting-chip">IN QUEUE</span>
+                    </div>
+
+                    <div id="waitingList" class="visitor-queue-list">
+                        <p class="muted queue-placeholder">Loading waiting queue...</p>
+                    </div>
+                </section>
+
+                <div class="visitor-queue-footer">
+                    <span class="visitor-refresh-symbol" aria-hidden="true">↻</span>
+                    Queue information refreshes automatically.
+                </div>
+            </article>
+        </section>
+
+        <section id="tokenResult" class="visitor-panel visitor-token-result" hidden aria-live="polite">
+            <div class="visitor-result-header">
+                <div>
+                    <p class="visitor-eyebrow">STEP 02 · CONFIRMATION</p>
+                    <h2>Your token is ready!</h2>
+                    <p id="resultStatus">You have joined the queue.</p>
+                </div>
+                <div class="visitor-result-check" aria-hidden="true">✓</div>
+            </div>
+
+            <div class="visitor-result-ticket">
+                <span class="visitor-result-label">YOUR TOKEN NUMBER</span>
+                <h3 id="resultNumber">Q---</h3>
+                <span class="visitor-result-ticket-note">Keep this number for your visit.</span>
+            </div>
+
+            <div class="visitor-result-stats">
+                <div class="visitor-result-stat">
+                    <span>Queue position</span>
+                    <strong id="resultPosition">—</strong>
+                </div>
+                <div class="visitor-result-stat">
+                    <span>Estimated wait</span>
+                    <strong id="resultWait">—</strong>
+                </div>
+            </div>
+
+            <a id="tokenLink" class="visitor-tracking-button" href="#">
+                Track My Token <span aria-hidden="true">→</span>
+            </a>
+
+            <p class="visitor-small-note">
+                Waiting times are estimates, not guarantees. Your position and estimated wait
+                may change as the queue moves.
+            </p>
+        </section>
+
+        <section class="visitor-help-strip">
+            <div class="visitor-help-icon" aria-hidden="true">?</div>
+            <div>
+                <h3>What happens next?</h3>
+                <p>Keep your token number handy, follow the live queue, and visit the service counter when your token is called.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="visitor-footer">
+        <a class="visitor-footer-brand" href="/">QueueWise<span>.</span></a>
+        <p>Smarter queues. Better public services.</p>
+        <p class="visitor-footer-disclaimer">
+            Prototype for a public-service office. Queue activity may use simulated demo data.
+        </p>
+    </footer>
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

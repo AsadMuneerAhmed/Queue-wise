@@ -1,0 +1,1720 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QueueWise | Staff Dashboard</title>
+
+    <style>
+        :root {
+            --navy: #101b2d;
+            --navy-light: #17263c;
+            --teal: #12b8a6;
+            --teal-dark: #0d9488;
+            --background: #f3f6fb;
+            --white: #ffffff;
+            --text: #172338;
+            --muted: #758198;
+            --border: #e5eaf2;
+            --green: #15966b;
+            --red: #d94b55;
+            --orange: #d98922;
+            --shadow: 0 8px 24px rgba(22, 36, 58, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            background: var(--background);
+            color: var(--text);
+        }
+
+        button, input, select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .ops-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+
+        .ops-sidebar {
+            width: 245px;
+            flex-shrink: 0;
+            background: var(--navy);
+            color: #fff;
+            padding: 26px 18px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ops-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 10px 30px;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+        }
+
+        .ops-logo {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            background: var(--teal);
+            color: var(--navy);
+            font-size: 22px;
+            font-weight: 900;
+        }
+
+        .ops-brand h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .ops-brand p {
+            margin: 4px 0 0;
+            color: #9eacc1;
+            font-size: 11px;
+        }
+
+        .ops-nav-label {
+            margin: 27px 10px 12px;
+            color: #8493a9;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .ops-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .ops-nav a {
+            padding: 13px 12px;
+            color: #bdc8d8;
+            border-radius: 9px;
+            text-decoration: none;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background .2s, color .2s;
+        }
+
+        .ops-nav a:hover,
+        .ops-nav a.active {
+            background: var(--navy-light);
+            color: #fff;
+        }
+
+        .ops-nav a.active {
+            box-shadow: inset 3px 0 var(--teal);
+        }
+
+        .ops-nav-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .ops-sidebar-footer {
+            margin-top: auto;
+            padding: 17px 10px 0;
+            border-top: 1px solid rgba(255,255,255,.1);
+        }
+
+        .ops-online {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #c2d0df;
+            font-size: 12px;
+        }
+
+        .ops-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #35d69a;
+        }
+
+        .ops-prototype {
+            margin-top: 10px;
+            color: #8595aa;
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        /* Main content */
+
+        .ops-main {
+            min-width: 0;
+            flex: 1;
+            padding: 28px 32px 40px;
+        }
+
+        .ops-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 27px;
+        }
+
+        .ops-eyebrow {
+            margin: 0 0 7px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .ops-topbar h1 {
+            margin: 0;
+            font-size: clamp(22px, 3vw, 29px);
+            letter-spacing: -.7px;
+        }
+
+        .ops-topbar-subtitle {
+            margin: 7px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .ops-top-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ops-date {
+            color: var(--muted);
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .ops-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 11px 15px;
+            border: 0;
+            border-radius: 9px;
+            background: var(--teal);
+            color: #062d2c;
+            font-size: 12px;
+            font-weight: 800;
+            transition: background .2s, transform .2s;
+        }
+
+        .ops-button:hover {
+            background: #2bd0bd;
+            transform: translateY(-1px);
+        }
+
+        .ops-button:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .ops-button.secondary {
+            color: #334258;
+            background: #edf1f7;
+        }
+
+        .ops-button.secondary:hover {
+            background: #e1e8f1;
+        }
+
+        .ops-button.danger {
+            color: #a52f3a;
+            background: #fff0f1;
+        }
+
+        .ops-button.small {
+            padding: 8px 10px;
+            font-size: 11px;
+        }
+
+        /* Notification */
+
+        .ops-notice {
+            display: none;
+            padding: 13px 16px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .ops-notice.show {
+            display: block;
+        }
+
+        .ops-notice.success {
+            background: #e8faf3;
+            border: 1px solid #b8efda;
+            color: #08724e;
+        }
+
+        .ops-notice.error {
+            background: #fff0f0;
+            border: 1px solid #f5c7ca;
+            color: #a62b35;
+        }
+
+        .ops-notice.info {
+            background: #eaf4ff;
+            border: 1px solid #c9e0fa;
+            color: #285b91;
+        }
+
+        /* Statistics */
+
+        .ops-stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 17px;
+            margin-bottom: 25px;
+        }
+
+        .ops-stat {
+            padding: 21px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            box-shadow: var(--shadow);
+        }
+
+        .ops-stat-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 19px;
+        }
+
+        .ops-stat-label {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .ops-stat-icon {
+            width: 35px;
+            height: 35px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            background: #e5faf7;
+            color: var(--teal-dark);
+            font-size: 17px;
+        }
+
+        .ops-stat:nth-child(2) .ops-stat-icon {
+            background: #fff4df;
+            color: var(--orange);
+        }
+
+        .ops-stat:nth-child(3) .ops-stat-icon {
+            background: #eaf2ff;
+            color: #4779c6;
+        }
+
+        .ops-stat:nth-child(4) .ops-stat-icon {
+            background: #e8faf2;
+            color: var(--green);
+        }
+
+        .ops-stat-value {
+            margin: 0;
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -.8px;
+        }
+
+        .ops-stat-note {
+            margin-top: 7px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        /* Dashboard panels */
+
+        .ops-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(300px, .85fr);
+            gap: 20px;
+            align-items: start;
+            margin-bottom: 22px;
+        }
+
+        .ops-panel {
+            min-width: 0;
+            overflow: hidden;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            box-shadow: var(--shadow);
+        }
+
+        .ops-panel-header {
+            padding: 20px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .ops-panel-header h2 {
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .ops-panel-header p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .ops-panel-body {
+            padding: 22px;
+        }
+
+        .ops-field {
+            margin-bottom: 17px;
+        }
+
+        .ops-field label {
+            display: block;
+            margin-bottom: 8px;
+            color: #46546a;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .ops-field select,
+        .ops-field input {
+            width: 100%;
+            min-height: 43px;
+            padding: 11px 12px;
+            background: #fbfcfe;
+            border: 1px solid #dfe6ef;
+            border-radius: 8px;
+            outline: none;
+            color: var(--text);
+            font-size: 13px;
+        }
+
+        .ops-field select:focus,
+        .ops-field input:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(18,184,166,.1);
+        }
+
+        .ops-current-serving {
+            padding: 17px;
+            margin: 5px 0 18px;
+            background: #f1fbf9;
+            border: 1px solid #d4f1eb;
+            border-radius: 10px;
+        }
+
+        .ops-current-label {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .ops-current-number {
+            margin: 8px 0 5px;
+            font-size: 25px;
+            font-weight: 800;
+            color: #087d72;
+        }
+
+        .ops-current-detail {
+            color: #66788b;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .ops-control-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .ops-control-actions .ops-button {
+            flex: 1;
+        }
+
+        /* Counters */
+
+        .ops-counter-form {
+            display: flex;
+            gap: 9px;
+            margin-bottom: 19px;
+        }
+
+        .ops-counter-form input {
+            flex: 1;
+            width: 100%;
+            min-width: 0;
+            padding: 11px 12px;
+            border: 1px solid #dfe6ef;
+            border-radius: 8px;
+            outline: none;
+            font-size: 12px;
+        }
+
+        .ops-counter-form input:focus {
+            border-color: var(--teal);
+        }
+
+        .ops-counter-list {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+
+        .ops-counter-item {
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+
+        .ops-counter-item-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .ops-counter-name {
+            margin: 0;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .ops-counter-serving {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .ops-counter-actions {
+            display: flex;
+            gap: 7px;
+            margin-top: 12px;
+        }
+
+        .ops-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .ops-status.active {
+            background: #e6f8ef;
+            color: #168052;
+        }
+
+        .ops-status.paused {
+            background: #fff1df;
+            color: #a56310;
+        }
+
+        .ops-status.waiting {
+            background: #fff4df;
+            color: #a56310;
+        }
+
+        .ops-status.serving {
+            background: #eaf2ff;
+            color: #3268b0;
+        }
+
+        .ops-status.completed {
+            background: #e7f8ee;
+            color: #168052;
+        }
+
+        /* Queue table */
+
+        .ops-queue-panel {
+            margin-bottom: 22px;
+        }
+
+        .ops-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .ops-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .ops-table th {
+            padding: 14px 20px;
+            background: #f9fbfd;
+            color: #7c899d;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .ops-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid #edf0f5;
+            font-size: 12px;
+        }
+
+        .ops-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .ops-table tbody tr:hover {
+            background: #fbfdfd;
+        }
+
+        .ops-token-number {
+            color: #087d72;
+            font-weight: 800;
+        }
+
+        .ops-muted {
+            color: var(--muted);
+        }
+
+        .ops-empty {
+            padding: 30px 18px !important;
+            text-align: center;
+            color: var(--muted);
+            white-space: normal;
+            line-height: 1.6;
+        }
+
+        /* Analytics */
+
+        .ops-analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            padding: 20px 22px;
+        }
+
+        .ops-analytics-item {
+            padding: 17px;
+            border-radius: 10px;
+            background: #f7f9fc;
+        }
+
+        .ops-analytics-label {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .ops-analytics-value {
+            margin-top: 10px;
+            font-size: 23px;
+            font-weight: 800;
+        }
+
+        .ops-footer {
+            margin-top: 25px;
+            color: #8a96a7;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .ops-loading {
+            color: var(--muted);
+            padding: 18px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        /* Responsive layout */
+
+        @media (max-width: 1100px) {
+            .ops-sidebar {
+                width: 215px;
+            }
+
+            .ops-main {
+                padding: 24px 20px 35px;
+            }
+
+            .ops-stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .ops-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .ops-layout {
+                display: block;
+            }
+
+            .ops-sidebar {
+                width: 100%;
+                padding: 15px;
+            }
+
+            .ops-brand {
+                padding: 0 4px 15px;
+            }
+
+            .ops-nav-label {
+                margin-top: 15px;
+            }
+
+            .ops-nav {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .ops-sidebar-footer {
+                margin-top: 18px;
+                padding-top: 12px;
+            }
+
+            .ops-main {
+                padding: 20px 13px 30px;
+            }
+
+            .ops-topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .ops-top-actions {
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
+
+            .ops-stats {
+                gap: 10px;
+            }
+
+            .ops-stat {
+                padding: 15px;
+            }
+
+            .ops-stat-value {
+                font-size: 25px;
+            }
+
+            .ops-panel-header,
+            .ops-panel-body {
+                padding: 16px;
+            }
+
+            .ops-analytics-grid {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+
+            .ops-control-actions {
+                flex-direction: column;
+            }
+
+            .ops-control-actions .ops-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="ops-layout">
+
+    <aside class="ops-sidebar">
+        <div class="ops-brand">
+            <div class="ops-logo">Q</div>
+            <div>
+                <h2>QueueWise</h2>
+                <p>Smart Queue Management</p>
+            </div>
+        </div>
+
+        <p class="ops-nav-label">Workspace</p>
+
+        <nav class="ops-nav">
+            <a class="active" href="/staff">
+                <span class="ops-nav-icon">▦</span>
+                Operations Overview
+            </a>
+            <a href="#live-queue">
+                <span class="ops-nav-icon">☷</span>
+                Live Queue
+            </a>
+            <a href="#counter-management">
+                <span class="ops-nav-icon">▤</span>
+                Service Counters
+            </a>
+            <a href="#analytics">
+                <span class="ops-nav-icon">▥</span>
+                Analytics
+            </a>
+            <a href="/">
+                <span class="ops-nav-icon">↗</span>
+                Visitor Portal
+            </a>
+            <a href="/display" target="_blank" rel="noopener">
+                <span class="ops-nav-icon">▣</span>
+                Public Display
+            </a>
+        </nav>
+
+        <div class="ops-sidebar-footer">
+            <div class="ops-online">
+                <span class="ops-dot"></span>
+                QueueWise Dashboard
+            </div>
+            <div class="ops-prototype">
+                Independent queue-management prototype.<br>
+                Not an official NADRA system.
+            </div>
+        </div>
+    </aside>
+
+    <main class="ops-main">
+
+        <header class="ops-topbar">
+            <div>
+                <p class="ops-eyebrow">Workspace / Operations</p>
+                <h1>Staff Dashboard</h1>
+                <p class="ops-topbar-subtitle">
+                    Manage visitors, service counters and queue flow.
+                </p>
+            </div>
+
+            <div class="ops-top-actions">
+                <span class="ops-date" id="currentDate"></span>
+                <button class="ops-button secondary" id="refreshButton" type="button">
+                    ↻ Refresh
+                </button>
+            </div>
+        </header>
+
+        <div id="notice" class="ops-notice" role="status" aria-live="polite"></div>
+
+        <!-- Overview statistics -->
+
+        <section class="ops-stats" aria-label="Queue statistics">
+            <article class="ops-stat">
+                <div class="ops-stat-top">
+                    <span class="ops-stat-label">Total Tokens</span>
+                    <span class="ops-stat-icon">▦</span>
+                </div>
+                <p class="ops-stat-value" id="totalTokens">—</p>
+                <div class="ops-stat-note">All recorded visitors</div>
+            </article>
+
+            <article class="ops-stat">
+                <div class="ops-stat-top">
+                    <span class="ops-stat-label">Waiting Visitors</span>
+                    <span class="ops-stat-icon">◷</span>
+                </div>
+                <p class="ops-stat-value" id="waitingTokens">—</p>
+                <div class="ops-stat-note">Visitors awaiting service</div>
+            </article>
+
+            <article class="ops-stat">
+                <div class="ops-stat-top">
+                    <span class="ops-stat-label">Being Served</span>
+                    <span class="ops-stat-icon">◉</span>
+                </div>
+                <p class="ops-stat-value" id="servingTokens">—</p>
+                <div class="ops-stat-note">Currently active tokens</div>
+            </article>
+
+            <article class="ops-stat">
+                <div class="ops-stat-top">
+                    <span class="ops-stat-label">Completed</span>
+                    <span class="ops-stat-icon">✓</span>
+                </div>
+                <p class="ops-stat-value" id="completedTokens">—</p>
+                <div class="ops-stat-note">Completed service tokens</div>
+            </article>
+        </section>
+
+        <!-- Service controls and counter management -->
+
+        <section class="ops-grid">
+
+            <article class="ops-panel" id="service-control">
+                <div class="ops-panel-header">
+                    <div>
+                        <h2>Service Control</h2>
+                        <p>Select a counter and call the next waiting visitor.</p>
+                    </div>
+                </div>
+
+                <div class="ops-panel-body">
+                    <div class="ops-field">
+                        <label for="counterSelect">Select service counter</label>
+                        <select id="counterSelect">
+                            <option value="">Loading counters...</option>
+                        </select>
+                    </div>
+
+                     <div class="ops-current-serving" id="currentServing">
+                     <div class="ops-current-label">CURRENTLY SERVING</div>
+                     <div class="ops-current-number" id="currentServingNumber">No active token</div>
+                      <div class="ops-current-detail" id="currentServingDetail">
+        
+    </div>
+</div>
+
+                    <div class="ops-control-actions">
+                        <button class="ops-button" id="callNextButton" type="button">
+                            → Call Next Visitor
+                        </button>
+                        <button class="ops-button secondary" id="completeCurrentButton"
+                                type="button" disabled>
+                            ✓ Complete Service
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="ops-panel" id="counter-management">
+                <div class="ops-panel-header">
+                    <div>
+                        <h2>Counter Management</h2>
+                        <p>Control counter availability and workload.</p>
+                    </div>
+                    <span class="ops-status active" id="counterCountBadge">0 counters</span>
+                </div>
+
+                <div class="ops-panel-body">
+                    <form class="ops-counter-form" id="counterForm">
+                        <input
+                            type="text"
+                            id="counterName"
+                            name="name"
+                            placeholder="New counter name"
+                            maxlength="60"
+                            required
+                        >
+                        <button class="ops-button" type="submit">+ Add</button>
+                    </form>
+
+                    <div class="ops-counter-list" id="counterList">
+                        <div class="ops-loading">Loading counters...</div>
+                    </div>
+                </div>
+            </article>
+
+        </section>
+
+        <!-- Waiting queue -->
+
+        <section class="ops-panel ops-queue-panel" id="live-queue">
+            <div class="ops-panel-header">
+                <div>
+                    <h2>Live Waiting Queue</h2>
+                    <p>Visitors waiting for their turn.</p>
+                </div>
+                <span class="ops-status waiting" id="waitingCountBadge">0 waiting</span>
+            </div>
+
+            <div class="ops-table-wrap">
+                <table class="ops-table">
+                    <thead>
+                        <tr>
+                            <th>Token</th>
+                            <th>Visitor</th>
+                            <th>Service Required</th>
+                            <th>Waiting Since</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="waitingTable">
+                        <tr>
+                            <td colspan="5" class="ops-empty">Loading queue...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Analytics -->
+
+        <section class="ops-panel" id="analytics">
+            <div class="ops-panel-header">
+                <div>
+                    <h2>Queue Analytics</h2>
+                    <p>A quick overview of current service operations.</p>
+                </div>
+            </div>
+
+            <div class="ops-analytics-grid">
+                <div class="ops-analytics-item">
+                    <div class="ops-analytics-label">Active Counters</div>
+                    <div class="ops-analytics-value" id="activeCounterTotal">—</div>
+                </div>
+                <div class="ops-analytics-item">
+                    <div class="ops-analytics-label">Average Wait</div>
+                    <div class="ops-analytics-value" id="averageWait">—</div>
+                </div>
+                <div class="ops-analytics-item">
+                    <div class="ops-analytics-label">Completed Services</div>
+                    <div class="ops-analytics-value" id="analyticsCompleted">—</div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="ops-footer">
+            QueueWise · Independent queue-management prototype · Live updates every 5 seconds
+        </footer>
+
+    </main>
+</div>
+
+<script>
+    const API_BASE = "";
+
+    let tokens = [];
+    let counters = [];
+    let analyticsData = {};
+    let noticeTimer = null;
+    let refreshInProgress = false;
+
+    const $ = (id) => document.getElementById(id);
+
+    function escapeHTML(value) {
+        return String(value ?? "").replace(/[&<>"']/g, (character) => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        })[character]);
+    }
+
+    async function api(url, options = {}) {
+        const requestOptions = {
+            ...options,
+            headers: {
+                "Content-Type": "application/json",
+                ...(options.headers || {})
+            }
+        };
+
+        const response = await fetch(API_BASE + url, requestOptions);
+        const contentType = response.headers.get("content-type") || "";
+
+        let data = {};
+
+        if (contentType.includes("application/json")) {
+            data = await response.json();
+        } else {
+            const text = await response.text();
+            data = text ? { message: text } : {};
+        }
+
+        if (!response.ok) {
+            throw new Error(
+                data.error || data.message || `Request failed (${response.status})`
+            );
+        }
+
+        return data;
+    }
+
+    function showNotice(message, type = "success") {
+        const notice = $("notice");
+
+        notice.textContent = message;
+        notice.className = `ops-notice show ${type}`;
+
+        if (noticeTimer) {
+            clearTimeout(noticeTimer);
+        }
+
+        noticeTimer = setTimeout(() => {
+            notice.className = "ops-notice";
+        }, 5000);
+    }
+
+    function getList(data, possibleKeys = []) {
+        if (Array.isArray(data)) {
+            return data;
+        }
+
+        if (!data || typeof data !== "object") {
+            return [];
+        }
+
+        for (const key of possibleKeys) {
+            if (Array.isArray(data[key])) {
+                return data[key];
+            }
+        }
+
+        return [];
+    }
+
+    function getTokenList(data) {
+        if (Array.isArray(data)) {
+            return data;
+        }
+
+        if (!data || typeof data !== "object") {
+            return [];
+        }
+
+        const possibleKeys = [
+            "tokens", "queue", "items", "data",
+            "waiting", "serving", "completed"
+        ];
+
+        const collected = [];
+        const seen = new Set();
+
+        for (const key of possibleKeys) {
+            if (!Array.isArray(data[key])) {
+                continue;
+            }
+
+            for (const token of data[key]) {
+                const id = token.id ?? token.token_id;
+
+                if (id !== undefined && id !== null) {
+                    if (seen.has(String(id))) {
+                        continue;
+                    }
+                    seen.add(String(id));
+                }
+
+                collected.push(token);
+            }
+        }
+
+        return collected;
+    }
+
+    function normalizeStatus(status) {
+        return String(status || "waiting").trim().toLowerCase();
+    }
+
+    function isWaiting(token) {
+        return normalizeStatus(token.status) === "waiting";
+    }
+
+    function isServing(token) {
+        const status = normalizeStatus(token.status);
+        return status === "serving" || status === "in_progress";
+    }
+
+    function isCompleted(token) {
+        const status = normalizeStatus(token.status);
+        return status === "completed" || status === "complete";
+    }
+
+    function tokenNumber(token) {
+        return token.token_number ?? token.number ?? token.id ?? "—";
+    }
+
+    function visitorName(token) {
+        return token.visitor_name ?? token.name ?? "Visitor";
+    }
+
+    function serviceName(token) {
+        return token.service ?? token.service_name ?? "General Inquiry";
+    }
+
+    function counterIdFor(token) {
+        return token.counter_id ?? token.counterId ?? null;
+    }
+
+    function formatStatus(status) {
+        const normalized = normalizeStatus(status);
+
+        if (normalized === "in_progress") {
+            return "Serving";
+        }
+
+        if (normalized === "complete") {
+            return "Completed";
+        }
+
+        return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+    }
+
+    function statusBadge(status) {
+        const normalized = normalizeStatus(status);
+        let className = "waiting";
+
+        if (isServing({ status })) {
+            className = "serving";
+        } else if (isCompleted({ status })) {
+            className = "completed";
+        }
+
+        return `<span class="ops-status ${className}">${escapeHTML(formatStatus(status))}</span>`;
+    }
+
+    function formatDateTime(value) {
+        if (!value) {
+            return "—";
+        }
+
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+            return String(value);
+        }
+
+        return date.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+    }
+
+    function minutesSince(value) {
+        if (!value) {
+            return null;
+        }
+
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+            return null;
+        }
+
+        return Math.max(0, Math.floor((Date.now() - date.getTime()) / 60000));
+    }
+
+    function counterIsActive(counter) {
+        return counter.is_active === true ||
+               counter.is_active === 1 ||
+               counter.is_active === "1";
+    }
+
+    function getSelectedCounter() {
+        const id = $("counterSelect").value;
+
+        return counters.find(counter => String(counter.id) === String(id)) || null;
+    }
+
+    function getCurrentTokenForCounter(counter) {
+    if (!counter) {
+        return null;
+    }
+
+    return tokens.find(token =>
+        isServing(token) &&
+        String(counterIdFor(token)) === String(counter.id)
+    ) || tokens.find(token =>
+        isServing(token) &&
+        String(tokenNumber(token)) === String(counter.serving)
+    ) || null;
+    }
+
+    function renderStats() {
+        const waiting = tokens.filter(isWaiting);
+        const serving = tokens.filter(isServing);
+        const completed = tokens.filter(isCompleted);
+
+        $("totalTokens").textContent = tokens.length;
+        $("waitingTokens").textContent = waiting.length;
+        $("servingTokens").textContent = serving.length;
+        $("completedTokens").textContent = completed.length;
+
+        $("waitingCountBadge").textContent = `${waiting.length} waiting`;
+    }
+
+    function renderWaitingQueue() {
+        const tbody = $("waitingTable");
+
+        const waiting = tokens
+            .filter(isWaiting)
+            .sort((a, b) => {
+                const aDate = new Date(a.created_at || 0).getTime();
+                const bDate = new Date(b.created_at || 0).getTime();
+
+                return aDate - bDate;
+            });
+
+        if (waiting.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="ops-empty">
+                        No visitors are currently waiting.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        tbody.innerHTML = waiting.map(token => {
+            const waitingMinutes = minutesSince(token.created_at);
+            const waitingTime = waitingMinutes === null
+                ? formatDateTime(token.created_at)
+                : `${waitingMinutes} min`;
+
+            return `
+                <tr>
+                    <td>
+                        <span class="ops-token-number">
+                            ${escapeHTML(tokenNumber(token))}
+                        </span>
+                    </td>
+                    <td>${escapeHTML(visitorName(token))}</td>
+                    <td>${escapeHTML(serviceName(token))}</td>
+                    <td>${escapeHTML(waitingTime)}</td>
+                    <td>${statusBadge(token.status)}</td>
+                </tr>
+            `;
+        }).join("");
+    }
+
+function renderCurrentServing() {
+    const counter = getSelectedCounter();
+    const container = $("currentServing");
+    const completeButton = $("completeCurrentButton");
+    const callButton = $("callNextButton");
+
+    if (!counter) {
+        container.innerHTML = `
+            <div class="ops-current-label">CURRENTLY SERVING</div>
+            <div class="ops-current-number">No counter selected</div>
+            <div class="ops-current-detail">
+                Select a counter to view its current token.
+            </div>
+        `;
+        completeButton.disabled = true;
+        callButton.disabled = true;
+        return;
+    }
+
+    if (!counterIsActive(counter)) {
+        container.innerHTML = `
+            <div class="ops-current-label">COUNTER STATUS</div>
+            <div class="ops-current-number">Counter Paused</div>
+            <div class="ops-current-detail">
+                ${escapeHTML(counter.name)} is paused.
+            </div>
+        `;
+        completeButton.disabled = true;
+        callButton.disabled = true;
+        return;
+    }
+
+    const token = getCurrentTokenForCounter(counter);
+
+    // Use the counter API's serving value as a fallback.
+    const servingNumber = counter.serving;
+
+    if (token || servingNumber) {
+        container.innerHTML = `
+            <div class="ops-current-label">
+                CURRENTLY SERVING · ${escapeHTML(counter.name)}
+            </div>
+            <div class="ops-current-number">
+                ${escapeHTML(token ? tokenNumber(token) : servingNumber)}
+            </div>
+            <div class="ops-current-detail">
+                ${token
+                    ? `Visitor: ${escapeHTML(visitorName(token))}<br>
+                       Service: ${escapeHTML(serviceName(token))}`
+                    : "Visitor details are loading. Please refresh shortly."}
+            </div>
+        `;
+
+        completeButton.disabled = !token;
+        callButton.disabled = true;
+    } else {
+        container.innerHTML = `
+            <div class="ops-current-label">
+                CURRENTLY SERVING · ${escapeHTML(counter.name)}
+            </div>
+            <div class="ops-current-number">No active token</div>
+            <div class="ops-current-detail">
+                This counter is ready for the next waiting visitor.
+            </div>
+        `;
+
+        completeButton.disabled = true;
+        callButton.disabled = tokens.filter(isWaiting).length === 0;
+    }
+}
+
+    function renderCounterOptions() {
+        const select = $("counterSelect");
+        const previousValue = select.value;
+
+        const activeCounters = counters.filter(counterIsActive);
+
+        if (activeCounters.length === 0) {
+            select.innerHTML = `<option value="">No active counters</option>`;
+            return;
+        }
+
+        select.innerHTML = activeCounters.map(counter => `
+            <option value="${escapeHTML(counter.id)}">
+                ${escapeHTML(counter.name)}
+            </option>
+        `).join("");
+
+        if (activeCounters.some(counter => String(counter.id) === previousValue)) {
+            select.value = previousValue;
+        } else {
+            select.value = String(activeCounters[0].id);
+        }
+    }
+
+    function renderCounters() {
+        const container = $("counterList");
+
+        $("counterCountBadge").textContent =
+            `${counters.length} counter${counters.length === 1 ? "" : "s"}`;
+
+        if (counters.length === 0) {
+            container.innerHTML = `
+                <div class="ops-empty">
+                    No counters have been created yet. Add your first service counter above.
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = counters.map(counter => {
+            const active = counterIsActive(counter);
+            const currentToken = getCurrentTokenForCounter(counter);
+
+            const servingText = currentToken
+                ? `Serving ${tokenNumber(currentToken)} · ${visitorName(currentToken)}`
+                : "No active token";
+
+            return `
+                <div class="ops-counter-item">
+                    <div class="ops-counter-item-top">
+                        <div>
+                            <p class="ops-counter-name">${escapeHTML(counter.name)}</p>
+                            <p class="ops-counter-serving">${escapeHTML(servingText)}</p>
+                        </div>
+                        <span class="ops-status ${active ? "active" : "paused"}">
+                            ${active ? "● Active" : "Ⅱ Paused"}
+                        </span>
+                    </div>
+
+                    <div class="ops-counter-actions">
+                        <button
+                            class="ops-button small ${active ? "secondary" : ""}"
+                            type="button"
+                            data-counter-toggle="${escapeHTML(counter.id)}"
+                            data-next-active="${active ? "false" : "true"}"
+                        >
+                            ${active ? "Pause Counter" : "Activate Counter"}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join("");
+    }
+
+    function renderAnalytics() {
+        const activeCount = counters.filter(counterIsActive).length;
+
+        $("activeCounterTotal").textContent =
+            analyticsData.active_counters ??
+            analyticsData.active_counter_count ??
+            activeCount;
+
+        const average = analyticsData.average_wait ??
+                        analyticsData.average_wait_time ??
+                        analyticsData.avg_wait_minutes;
+
+        if (average === undefined || average === null || average === "") {
+            $("averageWait").textContent = "—";
+        } else {
+            const number = Number(average);
+
+            $("averageWait").textContent = Number.isFinite(number)
+                ? `${number.toFixed(1)} min`
+                : String(average);
+        }
+
+        $("analyticsCompleted").textContent =
+            analyticsData.completed_today ??
+            analyticsData.completed_services ??
+            analyticsData.total_completed ??
+            tokens.filter(isCompleted).length;
+    }
+
+    function renderDashboard() {
+        renderStats();
+        renderCounterOptions();
+        renderCounters();
+        renderCurrentServing();
+        renderWaitingQueue();
+        renderAnalytics();
+    }
+
+    async function loadCounters() {
+        const data = await api("/api/counters");
+
+        counters = getList(data, ["counters", "items", "data"]);
+        renderCounterOptions();
+    }
+
+    async function refreshDashboard() {
+        if (refreshInProgress) {
+            return;
+        }
+
+        refreshInProgress = true;
+        $("refreshButton").disabled = true;
+
+        try {
+            const results = await Promise.all([
+                api("/api/queue"),
+                api("/api/counters"),
+                api("/api/analytics")
+            ]);
+
+            tokens = getTokenList(results[0]);
+            counters = getList(results[1], ["counters", "items", "data"]);
+            analyticsData = results[2] || {};
+
+            renderDashboard();
+        } catch (error) {
+            showNotice(
+                `Could not refresh dashboard: ${error.message}. Check that the Flask server is running.`,
+                "error"
+            );
+        } finally {
+            refreshInProgress = false;
+            $("refreshButton").disabled = false;
+        }
+    }
+
+    async function callNextVisitor() {
+        const counterId = $("counterSelect").value;
+
+        if (!counterId) {
+            showNotice("Please select an active counter first.", "error");
+            return;
+        }
+
+        const counter = getSelectedCounter();
+
+        if (!counter || !counterIsActive(counter)) {
+            showNotice("Please select an active counter.", "error");
+            return;
+        }
+
+        const currentToken = getCurrentTokenForCounter(counter);
+
+        if (currentToken) {
+            showNotice(
+                "This counter is already serving a visitor. Complete that service first.",
+                "info"
+            );
+            return;
+        }
+
+        $("callNextButton").disabled = true;
+
+        try {
+            const result = await api("/api/staff/next", {
+                method: "POST",
+                body: JSON.stringify({
+                    counter_id: Number(counterId)
+                })
+            });
+
+            showNotice(
+                result.message || "The next visitor has been called.",
+                "success"
+            );
+
+            await refreshDashboard();
+        } catch (error) {
+            showNotice(`Could not call the next visitor: ${error.message}`, "error");
+            await refreshDashboard();
+        } finally {
+            renderCurrentServing();
+        }
+    }
+
+    async function completeCurrentService() {
+        const counter = getSelectedCounter();
+        const token = getCurrentTokenForCounter(counter);
+
+        if (!counter || !token) {
+            showNotice("There is no active token to complete at this counter.", "error");
+            return;
+        }
+
+        const tokenId = token.id ?? token.token_id;
+
+        if (tokenId === undefined || tokenId === null) {
+            showNotice("The active token does not contain a usable ID.", "error");
+            return;
+        }
+
+        $("completeCurrentButton").disabled = true;
+
+        try {
+            const result = await api(`/api/tokens/${encodeURIComponent(tokenId)}/complete`, {
+                method: "POST"
+            });
+
+            showNotice(
+                result.message || `Token ${tokenNumber(token)} completed successfully.`,
+                "success"
+            );
+
+            await refreshDashboard();
+        } catch (error) {
+            showNotice(`Could not complete service: ${error.message}`, "error");
+            await refreshDashboard();
+        }
+    }
+
+    async function addCounter(event) {
+        event.preventDefault();
+
+        const input = $("counterName");
+        const name = input.value.trim();
+
+        if (!name) {
+            showNotice("Enter a name for the new counter.", "error");
+            return;
+        }
+
+        const submitButton = $("counterForm").querySelector("button");
+        submitButton.disabled = true;
+
+        try {
+            const result = await api("/api/counters", {
+                method: "POST",
+                body: JSON.stringify({ name })
+            });
+
+            input.value = "";
+
+            showNotice(result.message || "Service counter added successfully.", "success");
+            await refreshDashboard();
+        } catch (error) {
+            showNotice(`Could not add counter: ${error.message}`, "error");
+        } finally {
+            submitButton.disabled = false;
+        }
+    }
+
+    async function toggleCounter(counterId, nextActive) {
+        const counter = counters.find(
+            item => String(item.id) === String(counterId)
+        );
+
+        if (!counter) {
+            showNotice("Counter not found. Refresh the dashboard and try again.", "error");
+            return;
+        }
+
+        const currentToken = getCurrentTokenForCounter(counter);
+
+        if (!nextActive && currentToken) {
+            showNotice(
+                "This counter is serving a visitor. Complete the service before pausing it.",
+                "error"
+            );
+            return;
+        }
+
+        try {
+            const result = await api(`/api/counters/${encodeURIComponent(counterId)}`, {
+                method: "PATCH",
+                body: JSON.stringify({ is_active: nextActive })
+            });
+
+            showNotice(
+                result.message ||
+                `${counter.name} ${nextActive ? "activated" : "paused"} successfully.`,
+                "success"
+            );
+
+            await refreshDashboard();
+        } catch (error) {
+            showNotice(`Could not update counter: ${error.message}`, "error");
+            await refreshDashboard();
+        }
+    }
+
+    $("counterForm").addEventListener("submit", addCounter);
+
+    $("callNextButton").addEventListener("click", callNextVisitor);
+
+    $("completeCurrentButton").addEventListener(
+        "click",
+        completeCurrentService
+    );
+
+    $("counterSelect").addEventListener("change", renderCurrentServing);
+
+    $("refreshButton").addEventListener("click", refreshDashboard);
+
+    $("counterList").addEventListener("click", event => {
+        const button = event.target.closest("[data-counter-toggle]");
+
+        if (!button) {
+            return;
+        }
+
+        toggleCounter(
+            button.dataset.counterToggle,
+            button.dataset.nextActive === "true"
+        );
+    });
+
+    $("currentDate").textContent = new Date().toLocaleDateString([], {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+    });
+
+    refreshDashboard();
+    setInterval(refreshDashboard, 5000);
+</script>
+</body>
+</html>
