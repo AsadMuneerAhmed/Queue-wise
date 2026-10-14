@@ -29,7 +29,7 @@ class Counter(db.Model):
 
 class Token(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    token_number = db.Column(db.String(20), unique=True, nullable=False)
+    token_number = db.Column(db.String(20), nullable=False)
     visitor_name = db.Column(db.String(100), nullable=False)
     service = db.Column(db.String(100), nullable=False)
     status = db.Column(db.String(20), default="Waiting", nullable=False)
