@@ -20,18 +20,16 @@ Screenshots of the actual running application will be added here.
 <!-- Save screenshot files in the docs/screenshots/ folder. -->
 
 ### Main Dashboard
-![QueueWise Main Dashboard](<img width="959" height="437" alt="image" src="https://github.com/user-attachments/assets/fba6c45f-3924-4465-b269-2520a2327f51" />
-)
+![QueueWise Main Dashboard](<img width="959" height="437" alt="image" src="https://github.com/user-attachments/assets/fba6c45f-3924-4465-b269-2520a2327f51" />)
 
 ### Visitor Token Generation
-![Visitor Token Generation](docs/screenshots/visitor-token.png)
+![Visitor Token Generation](<img width="948" height="404" alt="image" src="https://github.com/user-attachments/assets/521f63b2-f482-4689-9230-91832f3b304f" />)
 
 ### Staff and Counter Management
-![Staff Counter Management](docs/screenshots/staff-dashboard.png)
+![Staff Counter Management](<img width="947" height="439" alt="image" src="https://github.com/user-attachments/assets/7012f453-62a8-4adb-bcde-d926cded7c67" />)
 
 ### Queue Tracking and Analytics
-![Queue Tracking and Analytics](docs/screenshots/queue-analytics.png)
-
+![Queue Tracking and Analytics](<img width="955" height="441" alt="image" src="https://github.com/user-attachments/assets/791a8cd5-14a5-4189-8640-1a1c350ac907" />)
 ## ✨ Key Features
 
 - **Digital Token Generation:** Visitors can request a numbered token for their selected service.
