@@ -11,25 +11,20 @@ QueueWise is a web-based queue management system designed to make public-service
 **[Open QueueWise](https://asadali345.pythonanywhere.com/)**
 
 Explore the deployed application to see the queue management workflow in action.
-
 ## 📸 Screenshots
 
-Screenshots of the actual running application will be added here.
-
-<!-- Replace these paths with screenshots captured from the real application. -->
-<!-- Save screenshot files in the docs/screenshots/ folder. -->
-
 ### Main Dashboard
-![QueueWise Main Dashboard](<img width="959" height="437" alt="image" src="https://github.com/user-attachments/assets/fba6c45f-3924-4465-b269-2520a2327f51" />)
+<img width="959" alt="QueueWise Main Dashboard" src="https://github.com/user-attachments/assets/fba6c45f-3924-4465-b269-2520a2327f51" />
 
 ### Visitor Token Generation
-![Visitor Token Generation](<img width="948" height="404" alt="image" src="https://github.com/user-attachments/assets/521f63b2-f482-4689-9230-91832f3b304f" />)
+<img width="948" alt="QueueWise Visitor Token Generation" src="https://github.com/user-attachments/assets/521f63b2-f482-4689-9230-91832f3b304f" />
 
 ### Staff and Counter Management
-![Staff Counter Management](<img width="947" height="439" alt="image" src="https://github.com/user-attachments/assets/7012f453-62a8-4adb-bcde-d926cded7c67" />)
+<img width="947" alt="QueueWise Staff and Counter Management" src="https://github.com/user-attachments/assets/7012f453-62a8-4adb-bcde-d926cded7c67" />
 
 ### Queue Tracking and Analytics
-![Queue Tracking and Analytics](<img width="955" height="441" alt="image" src="https://github.com/user-attachments/assets/791a8cd5-14a5-4189-8640-1a1c350ac907" />)
+<img width="955" alt="QueueWise Queue Tracking and Analytics" src="https://github.com/user-attachments/assets/791a8cd5-14a5-4189-8640-1a1c350ac907" />
+
 ## ✨ Key Features
 
 - **Digital Token Generation:** Visitors can request a numbered token for their selected service.
