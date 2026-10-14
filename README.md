@@ -11,6 +11,7 @@ QueueWise is a web-based queue management system designed to make public-service
 **[Open QueueWise](https://asadali345.pythonanywhere.com/)**
 
 Explore the deployed application to see the queue management workflow in action.##
+
 ## 📸 Screenshots
 
 ### 1. Main Dashboard
@@ -33,6 +34,7 @@ Explore the deployed application to see the queue management workflow in action.
 
 ### 7. Queue Tracking and Analytics
 <img width="955" alt="QueueWise Queue Tracking and Analytics" src="https://github.com/user-attachments/assets/791a8cd5-14a5-4189-8640-1a1c350ac907" />
+
 ## ✨ Key Features
 
 - **Digital Token Generation:** Visitors can request a numbered token for their selected service.
